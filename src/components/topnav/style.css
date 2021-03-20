@@ -1,0 +1,8 @@
+.navbar-dark {
+	padding: 0 10px;
+}
+
+.navbar-dark .navbar-brand {
+	font-family: "Teko";
+	font-size: 30px;
+}
