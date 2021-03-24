@@ -18,5 +18,9 @@ export const TOGGLE_TOPNAV_DROPDOWN_MENU = "TOGGLE_TOPNAV_DROPDOWN_MENU";
 export const CLOSE_TOPNAV_DROPDOWN_MENU = "CLOSE_TOPNAV_DROPDOWN_MENU";
 export const CLICK_TOPNAV_MENU_LINK = "CLICK_TOPNAV_MENU_LINK";
 
+/* ORDER PREVIEW */
+export const TOGGLE_ORDER_PREVIEW_MODAL = "TOGGLE_ORDER_PREVIEW_MODAL";
+
 export * from "./auth/actions";
 export * from "./topnav/actions";
+export * from "./order-preview/actions";

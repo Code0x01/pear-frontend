@@ -14,6 +14,7 @@ import {
 	FormText
 } from "reactstrap";
 import Cart from "../../components/cart";
+import OrderPreviewModal from "../../components/order-preview-modal";
 import "./style.css";
 
 const Home = props => {
@@ -190,6 +191,7 @@ const Home = props => {
 					</CardBody>
 				</Card>
 				<Cart />
+				<OrderPreviewModal />
 			</Form>
 		</Container>
 	);

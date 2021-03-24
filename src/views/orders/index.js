@@ -19,7 +19,7 @@ const Orders = props => {
 				<Col md="7" className="pr-2">
 					<Card>
 						<CardBody>
-							<Input placeholder="search orders" className="float-right"/>
+							<Input placeholder="search orders" className="mb-2"/>
 							<Table>
 								<thead>
 									<tr>

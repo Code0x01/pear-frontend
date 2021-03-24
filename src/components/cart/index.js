@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import { toggleOrderPreviewModal } from "../../redux/actions";
 import {
 	Card,
 	CardHeader,
@@ -10,6 +12,9 @@ import Slider from "../slider";
 import "./style.css";
 
 const Cart = props => {
+
+	const { toggleOrderPreviewModal } = props;
+
 	return (
 		<Card className="mt-2">
 			<CardBody>
@@ -43,7 +48,7 @@ const Cart = props => {
 						</tr>
 						<tr>
 							<td className="text-right" colSpan="6">
-								<Button color="success">
+								<Button color="success" onClick={toggleOrderPreviewModal}>
 									<i className="fa fa-shopping-cart"/> Checkout
 								</Button>
 							</td>
@@ -55,4 +60,11 @@ const Cart = props => {
 	);
 };
 
-export default Cart;
+const mapActionsToProps = dispatch => ({
+	toggleOrderPreviewModal: () => dispatch(toggleOrderPreviewModal())
+});
+
+export default connect(
+	null,
+	mapActionsToProps
+)(Cart);
