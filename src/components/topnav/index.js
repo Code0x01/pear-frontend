@@ -111,17 +111,6 @@ const Topnav = props => {
 									<i className="fa fa-user mr-2"/>Login
 								</Link>
 							</NavItem>
-							<NavItem
-								className={classnames(
-									{
-										"active": activeItem === "register"
-									}
-								)}
-							>
-								<Link to="/register" className="nav-link" onClick={() => clickTopnavMenuLink("products")}>
-									<i className="fa fa-user-plus mr-2"/>Register
-								</Link>
-							</NavItem>
 						</Nav>
 					</Collapse>
 				</Container>
