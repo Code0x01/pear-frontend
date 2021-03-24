@@ -15,7 +15,8 @@ const ViewCustomers = React.lazy(() => import("./views/customers"));
 const ViewHome = React.lazy(() => import("./views/home"));
 const ViewOrders = React.lazy(() => import("./views/orders"));
 const ViewProducts = React.lazy(() => import("./views/products"));
-const ViewStaff = React.lazy(() => import("./views/staff"))
+const ViewStaff = React.lazy(() => import("./views/staff"));
+const ViewLogin = React.lazy(() => import("./views/login"));
 
 const App = props => {
 
@@ -60,6 +61,11 @@ const App = props => {
                 path="/orders"
                 exact
                 render={props => (<ViewOrders {...props} />)}
+              />
+              <Route
+                path="/login"
+                exact
+                render={props => (<ViewLogin {...props} />)}
               />
               <Redirect to="/error" />
             </Switch>
