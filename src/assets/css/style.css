@@ -8,6 +8,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #B0F1CA;
+  padding-bottom: 10px;
 }
 
 code {
@@ -17,4 +19,8 @@ code {
 
 * {
 	font-family: "Roboto";
+}
+
+.h100 {
+  min-height: 100%;
 }

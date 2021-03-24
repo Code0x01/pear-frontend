@@ -1,0 +1,13 @@
+ul.slider {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul.slider li {
+	display: inline;
+}
+
+ul.slider li.val {
+	padding: 0 10px;
+}

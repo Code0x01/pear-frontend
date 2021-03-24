@@ -22,6 +22,7 @@ import {
 import { Link } from "react-router-dom";
 import classnames from "classnames";
 import "./style.css";
+import PearLogo from "../../assets/images/pear-logo.png";
 
 const Topnav = props => {
 	const {
@@ -33,9 +34,10 @@ const Topnav = props => {
 
 	return (
 		<div>
-			<Navbar color="dark" dark expand="md">
+			<Navbar className="topnav" dark expand="md">
 				<Container>
 					<Link to="/" className="navbar-brand" onClick={() => clickTopnavMenuLink("home")}>
+						<img src={PearLogo} alt="" />
 						Pear
 					</Link>
 					<NavbarToggler onClick={toggleTopnavDropdownMenu} />
