@@ -26,7 +26,7 @@ const Customers = props => {
 					<Card>
 						<CardHeader>
 							<strong>
-								<i className="fa fa-cube"/> Insert Customer
+								<i className="fa fa-user"/> Insert Customer
 							</strong>
 						</CardHeader>
 						<CardBody>
@@ -54,7 +54,7 @@ const Customers = props => {
 					<Card>
 						<CardHeader>
 							<strong>
-								<i className="fa fa-cubes"/> Customer Details
+								<i className="fa fa-users"/> Customer Details
 							</strong>
 						</CardHeader>
 						<CardBody>
