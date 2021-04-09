@@ -11,11 +11,6 @@ import AuthRoute from "./helpers/authRoute";
 import AppLayout from "./layout/AppLayout";
 
 const ViewMain = React.lazy(() => import("./views"));
-const ViewCustomers = React.lazy(() => import("./views/customers"));
-const ViewHome = React.lazy(() => import("./views/home"));
-const ViewOrders = React.lazy(() => import("./views/orders"));
-const ViewProducts = React.lazy(() => import("./views/products"));
-const ViewStaff = React.lazy(() => import("./views/staff"));
 const ViewLogin = React.lazy(() => import("./views/login"));
 
 const App = props => {
@@ -32,35 +27,10 @@ const App = props => {
         <Router>
           <AppLayout>
             <Switch>
-              <Route
-                path="/"
-                exact
-                render={props => (<ViewHome {...props} />)}
-              />
-              <Route
-                path="/home"
-                exact
-                render={props => (<ViewHome {...props} />)}
-              />
-              <Route
-                path="/products"
-                exact
-                render={props => (<ViewProducts {...props} />)}
-              />
-              <Route
-                path="/customers"
-                exact
-                render={props => (<ViewCustomers {...props} />)}
-              />
-              <Route
-                path="/staff"
-                exact
-                render={props => (<ViewStaff {...props} />)}
-              />
-              <Route
-                path="/orders"
-                exact
-                render={props => (<ViewOrders {...props} />)}
+              <AuthRoute
+                path="/app"
+                authUser={authUser}
+                component={ViewMain}
               />
               <Route
                 path="/login"

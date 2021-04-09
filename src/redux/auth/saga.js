@@ -18,7 +18,7 @@ import instance from "../../helpers/instance";
 /* LOGIN USER START */
 const authenticate = async (username, password) => {
     return await instance
-        .post("api/authenticate", { username, password })
+        .post("api/user/authenticate", { username, password })
         .then(resp => {
             localStorage.setItem("jwt", resp.data.jwt);
             instance.defaults.headers.common["Authorization"] = "Bearer " + resp.data.jwt;
@@ -29,7 +29,7 @@ const authenticate = async (username, password) => {
 };
 
 const getLogedUser = async () => {
-    return await instance.get("api/profile").then(resp => resp.data);
+    return await instance.get("api/user/profile").then(resp => resp.data);
 };
 
 function* loginWidthEmailAndPassword({ payload }) {
@@ -43,7 +43,7 @@ function* loginWidthEmailAndPassword({ payload }) {
             if (resp.jwt) {
                 const logedUserResponse = yield call(getLogedUser);
                 yield put(loginUserSuccess(logedUserResponse));
-                history.push("/dashboard");
+                history.push("/app/home");
             }
 
             if (resp.errors) {
@@ -65,7 +65,7 @@ export function* watchLoginUserStart() {
 function logout() {
     localStorage.removeItem("jwt");
     delete instance.defaults.headers.common["Authorization"];
-    window.location.href = "/";
+    window.location.href = "/login";
 }
 
 export function* watchLogoutUser() {
@@ -76,7 +76,7 @@ export function* watchLogoutUser() {
 /* REGISTER USER START */
 
 const registerUserAsync = async (user) => {
-    return await instance.post("/api/register", user)
+    return await instance.post("/api/user/register", user)
         .catch(error => ({ errors: error.response.data.errors }));
 };
 
@@ -108,7 +108,7 @@ export function* watchRegisterUserStart() {
 
 // SET CURRENT USER
 const setCurrentUserAsync = async () => {
-    return await instance.get("api/profile")
+    return await instance.get("api/user/profile")
         .then(resp => ({ user: resp.data }))
         .catch(err => ({ errors: err.response.data.errors }));
 };
