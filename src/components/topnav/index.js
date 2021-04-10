@@ -74,6 +74,16 @@ class Topnav extends Component {
 							<i className="fa fa-list mr-2"/>Orders
 						</Link>
 					</NavItem>
+					<NavItem className={classnames({"active": this.props.activeItem === "categories"})}>
+						<Link to="/app/categories" className="nav-link" onClick={() => this.onNavItemClick("categories")}>
+							<i className="fa fa-list mr-2"/>Categories
+						</Link>
+					</NavItem>
+					<NavItem className={classnames({"active": this.props.activeItem === "suppliers"})}>
+						<Link to="/app/suppliers" className="nav-link" onClick={() => this.onNavItemClick("suppliers")}>
+							<i className="fa fa-list mr-2"/>Suppliers
+						</Link>
+					</NavItem>
 				</Nav>
 				<Nav className="ml-auto" navbar>
 					<UncontrolledDropdown nav inNavbar>
