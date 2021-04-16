@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { 
 	Container,
 	Card,
@@ -11,8 +11,34 @@ import {
 	Input
 } from "reactstrap";
 import "./style.css";
+import { connect } from "react-redux";
+import { 
+	fetchAllOrdersStart,
+	fetchAllProductsStart,
+	fetchAllCustomersStart,
+} from "../../redux/actions";
+import _ from "lodash";
+
 
 const Orders = props => {
+
+	const [ orderDetails, setOrderDetails ] = useState([]);
+
+	const {
+		fetchAllOrdersStart,
+		fetchAllCustomersStart,
+		fetchAllProductsStart,
+		orders,
+		customers,
+		products
+	} = props;
+
+	useEffect(() => {
+		fetchAllOrdersStart();
+		fetchAllCustomersStart();
+		fetchAllProductsStart();
+	}, [fetchAllOrdersStart, fetchAllCustomersStart, fetchAllProductsStart]);
+
 	return (
 		<Container className="mt-2">
 			<Row noGutters={true}>
@@ -32,16 +58,27 @@ const Orders = props => {
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td>1</td>
-										<td>Customer 1</td>
-										<td>Sell</td>
-										<td>25-01-2021</td>
-										<td>1100</td>
-										<td>
-											<Button outline color="primary" size="sm"><i className="fa fa-search-plus"/></Button>
-										</td>
-									</tr>
+									{orders && orders.map((order, idx) => { 
+										const customer = _.find(customers, customer => customer.id === order.customerId);
+										return (
+										<tr key={idx}>
+											<td>{order.id}</td>
+											<td>{`${customer.firstName} ${customer.lastName}`}</td>
+											<td>{order.orderType}</td>
+											<td>{order.orderDate}</td>
+											<td>1100</td>
+											<td>
+												<Button 
+													outline 
+													color="primary" 
+													size="sm" 
+													onClick={() => setOrderDetails(order.orderDetails)}
+												>
+													<i className="fa fa-search-plus"/>
+												</Button>
+											</td>
+										</tr>)
+									})}
 								</tbody>
 							</Table>
 						</CardBody>
@@ -64,20 +101,18 @@ const Orders = props => {
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td>1</td>
-										<td>Product 1</td>
-										<td>1</td>
-										<td>1</td>
-										<td>1</td>
-									</tr>
-									<tr>
-										<td>2</td>
-										<td>Product 2</td>
-										<td>2</td>
-										<td>2</td>
-										<td>2</td>
-									</tr>
+									{orderDetails.map((item, idx) => {
+										const product = _.find(products, product => product.id === item.productId);
+										return (
+											<tr key={idx}>
+												<td>{product.id}</td>
+												<td>{product.name}</td>
+												<td>{product.price}</td>
+												<td>{item.quantity}</td>
+												<td>{item.total}</td>
+											</tr>
+										);
+									})}
 								</tbody>
 							</Table>
 						</CardBody>
@@ -89,4 +124,20 @@ const Orders = props => {
 	);
 };
 
-export default Orders;
+const mapStateToProps = ({ order, product, customer }) => {
+	const { orders } = order;
+	const { products } = product;
+	const { customers } = customer;
+	return { orders, products, customers };
+};
+
+const mapActionsToProps = dispatch => ({
+	fetchAllOrdersStart: () => dispatch(fetchAllOrdersStart()),
+	fetchAllProductsStart: () => dispatch(fetchAllProductsStart()),
+	fetchAllCustomersStart: () => dispatch(fetchAllCustomersStart()),
+});
+
+export default connect(
+	mapStateToProps,
+	mapActionsToProps
+)(Orders);

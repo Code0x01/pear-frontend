@@ -1,94 +1,112 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { 
 	Container,
 	Card,
 	CardHeader,
 	CardBody,
 	Button,
-	Table,
-	Row,
-	Col,
-	Form,
-	FormGroup,
-	Input
+	Table
 } from "reactstrap";
+import { connect } from "react-redux";
+import {
+	fetchAllSuppliersStart,
+	deleteSupplierStart,
+	toggleSupplierFormModal,
+	loadSavedSupplier,
+} from "../../redux/actions";
+import SupplierFormModal from "../../components/supplier-form-modal";
+import Message from "../../components/message";
 import "./style.css";
 
 const Suppliers = props => {
-	const handleOnSubmit = e => {
-		e.preventDefault();
-	};
+
+	const {
+		toggleSupplierFormModal,
+		fetchAllSuppliersStart,
+		deleteSupplierStart,
+		loadSavedSupplier,
+		suppliers,
+		message
+	} = props;
+
+	useEffect(() => {
+		fetchAllSuppliersStart();
+	}, [fetchAllSuppliersStart]);
 
 	return (
 		<Container className="mt-2">
-			<Row noGutters={true}>
-				<Col md="4">
-					<Card>
-						<CardHeader>
-							<strong>
-								<i className="fa fa-user"/> Insert Supplier
-							</strong>
-						</CardHeader>
-						<CardBody>
-							<Form onSubmit={handleOnSubmit}>
-								<FormGroup>
-									<label htmlFor="customerId">Supplier ID:</label>
-									<Input type="text" name="customerId" id="customerId" placeholder="Customer ID" disabled={true}/>
-								</FormGroup>
-								<FormGroup>
-									<label htmlFor="customerName">Supplier Name:</label>
-									<Input type="text" name="customerName" id="customerName" placeholder="Customer Name"/>
-								</FormGroup>
-								<FormGroup>
-									<label htmlFor="phone">Phone:</label>
-									<Input type="text" name="phone" id="phone" placeholder="Phone"/>
-								</FormGroup>
-								<Button color="success">
-									<i className="fa fa-send"/> Submit
-								</Button>
-							</Form>
-						</CardBody>
-					</Card>
-				</Col>
-				<Col md="8" className="pl-2">
-					<Card>
-						<CardHeader>
-							<strong>
-								<i className="fa fa-users"/> Supplier Details
-							</strong>
-						</CardHeader>
-						<CardBody>
-							<Table bordered>
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>Supplier Name</th>
-										<th>Phone</th>
-										<th className="action-col">Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>1</td>
-										<td>Supplier 1</td>
-										<td>123456789</td>
+			{message && <Message color="success"><i className="fa fa-check mr-1"/> {message}</Message>}
+			<div className="mb-2">
+				<Button color="primary" className="mr-1" size="sm" onClick={toggleSupplierFormModal}>
+					New Supplier
+				</Button>
+				<Button color="success" size="sm" onClick={fetchAllSuppliersStart}>
+					<i className="fa fa-refresh mr-1"/>
+				</Button>
+			</div>
+			<SupplierFormModal />
+			<Card>
+				<CardHeader>
+					<strong>
+						<i className="fa fa-users"/> Supplier Details
+					</strong>
+				</CardHeader>
+				<CardBody>
+					<Table bordered>
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Address</th>
+								<th>Phone</th>
+								<th>Email</th>
+								<th>OtherDetails</th>
+								<th className="action-col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{suppliers && suppliers.map(supplier => {
+								const { id, name, address, phone, email, otherDetails } = supplier;
+								return (
+									<tr key={id}>
+										<td>{id}</td>
+										<td>{name}</td>
+										<td>{address}</td>
+										<td>{phone}</td>
+										<td>{email}</td>
+										<td>{otherDetails}</td>
 										<td>
-											<Button color="warning" size="sm" className="mr-1">
+											<Button color="primary" size="sm" className="mr-1" onClick={() => loadSavedSupplier(id)}>
 												<i className="fa fa-edit" /> Edit
 											</Button>
-											<Button color="danger" size="sm">
+											<Button color="danger" size="sm" onClick={() => deleteSupplierStart(id)}>
 												<i className="fa fa-times" /> Remove
 											</Button>
 										</td>
 									</tr>
-								</tbody>
-							</Table>
-						</CardBody>
-					</Card>
-				</Col>
-			</Row>
+								);
+							})}
+						</tbody>
+					</Table>
+				</CardBody>
+			</Card>
 		</Container>
 	);
 };
 
-export default Suppliers;
+const mapStateToProps = ({ supplier: supplierState }) => {
+	const { suppliers, message } = supplierState;
+	return { suppliers, message };
+};
+
+const mapActionsToProps = dispatch => ({
+	fetchAllSuppliersStart: () => dispatch(fetchAllSuppliersStart()),
+	deleteSupplierStart: (id) => dispatch(deleteSupplierStart(id)),
+	toggleSupplierFormModal: () => dispatch(toggleSupplierFormModal()),
+	loadSavedSupplier: (id) => dispatch(loadSavedSupplier(id)),
+});
+
+export default connect(
+	mapStateToProps,
+	mapActionsToProps
+)(Suppliers);

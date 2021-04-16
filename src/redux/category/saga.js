@@ -15,10 +15,11 @@ import {
 	deleteCategoryFailure,
 	fetchOneCategorySuccess,
 	fetchOneCategoryFailure,
-	fetchAllCategoriesStart,
 	fetchAllCategoriesSuccess,
-	fetchAllCategoriesFailure
-} from "./actions"
+	fetchAllCategoriesFailure,
+	toggleCategoryFormModal,
+	unloadSavedCategory,
+} from "./actions";
 import instance from "../../helpers/instance";
 
 /* ADD CATEGORY */
@@ -43,20 +44,21 @@ export function* watchAddCategoryStart() {
 
 /* UPDATE CATEGORY */
 const updateCategoryAsync = async (category) => {
-	return await instance.put("api/categories", category).then(resp => resp.data);
+	return await instance.put("api/categories", category)
+		.then(resp => ({ category: resp.data, message: "category updated successfully" }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* updateCategory({ payload }) {
 	const { category } = payload;
-	let resp = null;
 	try {
-		resp = yield call(updateCategoryAsync, category);
+		let resp = yield call(updateCategoryAsync, category);
 		if (resp) {
-			yield put(updateCategorySuccess());
+			yield put(updateCategorySuccess(resp.category, resp.message));
+			yield put(unloadSavedCategory());
+			yield put(toggleCategoryFormModal());
 		}
-		if (resp.errors) {
-			yield put(updateCategoryFailure(resp.errors));
-		}
+		if (resp.errors) yield put(updateCategoryFailure(resp.errors));
 	} catch(error) { }
 }
 
@@ -114,7 +116,6 @@ const fetchAllCategoriesAsync = async () => {
 function* fetchAllCategories() {
 	try {
 		let resp = yield call(fetchAllCategoriesAsync);
-		console.log(resp);
 		if (resp) yield put(fetchAllCategoriesSuccess(resp.categories));
 		if (resp.errors) yield put(fetchAllCategoriesFailure(resp.errors));
 	} catch (error) {

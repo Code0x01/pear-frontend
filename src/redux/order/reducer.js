@@ -1,8 +1,6 @@
 import {
 	ADD_ORDER_SUCCESS,
 	ADD_ORDER_FAILURE,
-	UPDATE_ORDER_SUCCESS,
-	UPDATE_ORDER_FAILURE,
 	DELETE_ORDER_SUCCESS,
 	DELETE_ORDER_FAILURE,
 	FETCH_ONE_ORDER_SUCCESS,
@@ -25,7 +23,7 @@ export const orderReducer = (state = initialState, action) => {
 		case ADD_ORDER_SUCCESS:
 			return {
 				...state,
-				message: "Order added successfully"
+				message: action.payload.message
 			}
 
 		case ADD_ORDER_FAILURE:
@@ -34,13 +32,13 @@ export const orderReducer = (state = initialState, action) => {
 				errors: action.payload.errors
 			}
 
-		case UPDATE_ORDER_SUCCESS:
+		case DELETE_ORDER_SUCCESS:
 			return {
 				...state,
-				message: "Order updated successfully"
+				message: action.payload.message
 			}
 
-		case UPDATE_ORDER_FAILURE:
+		case DELETE_ORDER_FAILURE:
 			return {
 				...state,
 				errors: action.payload.errors

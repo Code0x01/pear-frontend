@@ -14,23 +14,24 @@ import {
 	deleteProductSuccess,
 	deleteProductFailure,
 	fetchOneProductSuccess,
-	fetchOneProductFailure,
 	fetchAllProductsSuccess,
-	fetchAllProductsFailure
+	fetchAllProductsFailure,
+	unloadSavedProduct,
 } from "./actions"
 import instance from "../../helpers/instance";
 
 /* ADD PRODUCT */
 const addProductAsync = async (product) => {
-	return await instance.post("api/products", product).then(resp => resp.data);
+	return await instance.post("api/products", product)
+		.then(resp => ({ product: resp.data, message: "Product created successfully" }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* addProduct({ payload }) {
 	const { product } = payload;
-	let resp = null;
 	try {
-		resp = yield call(addProductAsync, product);
-		if (resp) yield put(addProductSuccess());
+		let resp = yield call(addProductAsync, product);
+		if (resp.product) yield put(addProductSuccess(resp.product, resp.message));
 		if (resp.errors) yield put(addProductFailure(resp.errors));
 	} catch(error) { }
 }
@@ -41,15 +42,19 @@ export function* watchAddProductStart() {
 
 /* UPDATE PRODUCT */
 const updateProductAsync = async (product) => {
-	return await instance.put("api/products", product).then(resp => resp.data);
+	return await instance.put("api/products", product)
+		.then(resp => ({ product: resp.data, message: "Product updated successfully" }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* updateProduct({ payload }) {
 	const { product } = payload;
-	let resp = null;
 	try {
-		resp = yield call(updateProductAsync, product);
-		if (resp) yield put(updateProductSuccess());
+		let resp = yield call(updateProductAsync, product);
+		if (resp.product) {
+			yield put(updateProductSuccess(resp.product, resp.message));
+			yield put(unloadSavedProduct());
+		}
 		if (resp.errors) yield put(updateProductFailure(resp.errors));
 	} catch(error) { }
 }
@@ -60,15 +65,16 @@ export function* watchUpdateProductStart() {
 
 /* DELETE PRODUCT */
 const deleteProductAsync = async (id) => {
-	return await instance.delete(`api/products/${id}`).then(resp => resp.data);
+	return await instance.delete(`api/products/${id}`)
+		.then(resp => ({ id: id, message: "Product deleted successfully" }))
+		.catch(err => ({ errors: err.response.data.errors }));
 }
 
 function* deleteProduct({ payload }) {
 	const { id } = payload;
-	let resp = null;
 	try {
-		resp = yield call(deleteProductAsync, id);
-		if (resp) yield put(deleteProductSuccess());
+		let resp = yield call(deleteProductAsync, id);
+		if (resp.id) yield put(deleteProductSuccess(id, resp.message));
 		if (resp.errors) yield put(deleteProductFailure(resp.errors));
 	} catch(error) { }
 }
@@ -79,15 +85,16 @@ export function* watchDeleteProductStart() {
 
 /* FETCH ONE PRODUCT */
 const fetchOneProductAsync = async (id) => {
-	return await instance.get(`api/products/${id}`).then(resp => resp.data);
+	return await instance.get(`api/products/${id}`)
+		.then(resp => ({ product: resp.data }))
+		.catch(err => ({ errors: err.response.data.response }));
 };
 
 function* fetchOneProduct({ payload }) {
 	const { id } = payload;
-	let resp = null;
 	try {
-		resp = yield call(fetchOneProductAsync, id);
-		if (resp) yield put(fetchOneProductSuccess(resp));
+		let resp = yield call(fetchOneProductAsync, id);
+		if (resp.product) yield put(fetchOneProductSuccess(resp.product));
 		if (resp.errors) yield put(fetchAllProductsFailure(resp.errors));
 	} catch(error) { }
 }
@@ -98,14 +105,15 @@ export function* watchFetchOneProductStart() {
 
 /* FETCH ALL PRODUCTS */
 const fetchAllProductsAsync = async () => {
-	return await instance.get("api/products").then(resp => resp.data);
+	return await instance.get("api/products")
+		.then(resp => ({ products: resp.data }))
+		.catch(err => ({ errors: err.response.data.errors }));
 }
 
 function* fetchAllProducts() {
-	let resp = null;
 	try {
-		resp = yield call(fetchAllProductsAsync);
-		if (resp) yield put(fetchAllProductsSuccess(resp));
+		let resp = yield call(fetchAllProductsAsync);
+		if (resp.products) yield put(fetchAllProductsSuccess(resp.products));
 		if (resp.errors) yield put(fetchAllProductsFailure(resp.errors));
 	} catch(error) { }
 }

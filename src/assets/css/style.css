@@ -24,3 +24,7 @@ code {
 .h100 {
   min-height: 100%;
 }
+
+.action-col {
+  width: 180px;
+}

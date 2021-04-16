@@ -13,24 +13,24 @@ import {
 	updateSupplierFailure,
 	deleteSupplierSuccess,
 	deleteSupplierFailure,
-	fetchOneSupplierSuccess,
-	fetchOneSupplierFailure,
 	fetchAllSuppliersSuccess,
-	fetchAllSuppliersFailure
+	fetchAllSuppliersFailure,
+	unloadSavedSupplier,
 } from "./actions"
 import instance from "../../helpers/instance";
 
 /* ADD SUPPLIER */
 const addSupplierAsync = async (supplier) => {
-	return await instance.post("api/suppliers", supplier).then(resp => resp.data);
+	return await instance.post("api/suppliers", supplier)
+		.then(resp => ({ supplier: resp.data, message: "Supplier added successfully" }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* addSupplier({ payload }) {
 	const { supplier } = payload;
-	let resp = null;
 	try {
-		resp = yield call(addSupplierAsync, supplier);
-		if (resp) yield put(addSupplierSuccess());
+		let resp = yield call(addSupplierAsync, supplier);
+		if (resp.supplier) yield put(addSupplierSuccess(resp.supplier, resp.message));
 		if (resp.errors) yield put(addSupplierFailure(resp.errors));
 	} catch (error) { }
 }
@@ -41,15 +41,19 @@ export function* watchAddSupplierStart() {
 
 /* UPDATE SUPPLIER */
 const updateSupplierAsync = async (supplier) => {
-	return await instance.put("api/suppliers", supplier).then(resp => resp.data);
+	return await instance.put("api/suppliers", supplier)
+		.then(resp => ({ supplier: resp.data, message: "Supplier updated successfully" }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* updateSupplier({ payload }) {
 	const { supplier } = payload;
-	let resp = null;
 	try {
-		resp = yield call(updateSupplierAsync, supplier);
-		if (resp) yield put(updateSupplierSuccess());
+		let resp = yield call(updateSupplierAsync, supplier);
+		if (resp.supplier) {
+			yield put(updateSupplierSuccess(resp.supplier, resp.message));
+			yield put(unloadSavedSupplier());
+		}
 		if (resp.errors) yield put(updateSupplierFailure(resp.errors));
 	} catch (error) { }
 }
@@ -60,15 +64,16 @@ export function* watchUpdateSupplierStart() {
 
 /* DELETE SUPPLIER */
 const deleteSupplierAsync = async (id) => {
-	return await instance.delete(`api/suppliers/${id}`).then(resp => resp.data);
+	return await instance.delete(`api/suppliers/${id}`)
+		.then(resp => ({ id: id, message: "Supplier deleted successfully" }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* deleteSupplier({ payload }) {
 	const { id } = payload;
-	let resp = null;
 	try {
-		resp = yield call(deleteSupplierAsync, id);
-		if (resp) yield put(deleteSupplierSuccess(resp));
+		let resp = yield call(deleteSupplierAsync, id);
+		if (resp.id) yield put(deleteSupplierSuccess(id, resp.message));
 		if (resp.errors) yield put(deleteSupplierFailure(resp.errors));
 	} catch(error) { }
 }
@@ -79,15 +84,16 @@ export function* watchDeleteSupplierStart() {
 
 /* FETCH ONE SUPPLIER */
 const fetchOneSupplierAsync = async (id) => {
-	return await instance.get(`api/suppliers/${id}`).then(resp => resp.data);
+	return await instance.get(`api/suppliers/${id}`)
+		.then(resp => ({ supplier: resp.data }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* fetchOneSupplier({ payload }) {
 	const { id } = payload;
-	let resp = null;
 	try {
-		resp = yield call(fetchOneSupplierAsync, id);
-		if (resp) yield put(fetchAllSuppliersSuccess(resp));
+		let resp = yield call(fetchOneSupplierAsync, id);
+		if (resp.supplier) yield put(fetchAllSuppliersSuccess(resp.supplier));
 		if (resp.errors) yield put(fetchAllSuppliersFailure(resp.errors));
 	} catch(error) { }
 }
@@ -98,14 +104,16 @@ export function* watchFetchOneSupplierStart() {
 
 /* FETCH ALL SUPPLIERS */
 const fetchAllSuppliersAsync = async () => {
-	return await instance.get("api/suppliers").then(resp => resp.data);
+	return await instance.get("api/suppliers")
+		.then(resp => ({ suppliers: resp.data }))
+		.catch(err => ({ errors: err.response.data.errors }));
 };
 
 function* fetchAllSuppliers() {
 	let resp = null;
 	try {
 		resp = yield call(fetchAllSuppliersAsync);
-		if (resp) yield put(fetchAllSuppliersSuccess(resp));
+		if (resp.suppliers) yield put(fetchAllSuppliersSuccess(resp.suppliers));
 		if (resp.errors) yield put(fetchAllSuppliersFailure(resp.errors));
 	} catch(error) { }
 }

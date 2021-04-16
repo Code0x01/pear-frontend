@@ -2,9 +2,6 @@ import {
 	ADD_ORDER_START,
 	ADD_ORDER_SUCCESS,
 	ADD_ORDER_FAILURE,
-	UPDATE_ORDER_START,
-	UPDATE_ORDER_SUCCESS,
-	UPDATE_ORDER_FAILURE,
 	DELETE_ORDER_START,
 	DELETE_ORDER_SUCCESS,
 	DELETE_ORDER_FAILURE,
@@ -16,33 +13,18 @@ import {
 	FETCH_ALL_ORDERS_FAILURE,
 } from "../actions";
 
-export const addOrderStart = (order) => ({
+export const addOrderStart = (order, history) => ({
 	type: ADD_ORDER_START,
-	payload: { order }
+	payload: { order, history }
 });
 
-export const addOrderSuccess = () => ({
+export const addOrderSuccess = (message) => ({
 	type: ADD_ORDER_SUCCESS,
-	payload: { }
+	payload: { message }
 });
 
 export const addOrderFailure = (errors) => ({
 	type: ADD_ORDER_FAILURE,
-	payload: { errors }
-});
-
-export const updateOrderStart = (order) => ({
-	type: UPDATE_ORDER_START,
-	payload: { order }
-});
-
-export const updateOrderSuccess = () => ({
-	type: UPDATE_ORDER_SUCCESS,
-	payload: { }
-});
-
-export const updateOrderFailure = (errors) => ({
-	type: UPDATE_ORDER_FAILURE,
 	payload: { errors }
 });
 
@@ -51,9 +33,9 @@ export const deleteOrderStart = (id) => ({
 	payload: { id }
 });
 
-export const deleteOrderSuccess = () => ({
+export const deleteOrderSuccess = (message) => ({
 	type: DELETE_ORDER_SUCCESS,
-	payload: {}
+	payload: { message }
 });
 
 export const deleteOrderFailure = (errors) => ({

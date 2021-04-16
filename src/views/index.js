@@ -1,4 +1,4 @@
-import React, { Component, Suspense } from "react";
+import React, { Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
 const Customers = React.lazy(() => import("./customers"));
@@ -22,6 +22,10 @@ const Main = ({match}) => {
   				path={`${match.url}/home`}
   				render={(props) => <Home {...props} />}
   			/>
+        <Route
+          path={`${match.url}/products`}
+          render={(props) => <Products {...props} />}
+        />
   			<Route
   				path={`${match.url}/customers`}
   				render={(props) => <Customers {...props} />}

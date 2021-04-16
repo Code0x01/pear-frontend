@@ -14,6 +14,9 @@ import {
 	FETCH_ALL_PRODUCTS_START,
 	FETCH_ALL_PRODUCTS_SUCCESS,
 	FETCH_ALL_PRODUCTS_FAILURE,
+	TOGGLE_PRODUCT_FORM_MODAL,
+	LOAD_SAVED_PRODUCT,
+	UNLOAD_SAVED_PRODUCT,
 } from "../actions";
 
 export const addProductStart = (product) => ({
@@ -21,9 +24,9 @@ export const addProductStart = (product) => ({
 	payload: { product }
 });
 
-export const addProductSuccess = () => ({
+export const addProductSuccess = (product, message) => ({
 	type: ADD_PRODUCT_SUCCESS,
-	payload: { }
+	payload: { product, message }
 });
 
 export const addProductFailure = (errors) => ({
@@ -36,9 +39,9 @@ export const updateProductStart = (product) => ({
 	payload: { product }
 });
 
-export const updateProductSuccess = () => ({
+export const updateProductSuccess = (product, message) => ({
 	type: UPDATE_PRODUCT_SUCCESS,
-	payload: { }
+	payload: { product, message }
 });
 
 export const updateProductFailure = (errors) => ({
@@ -51,9 +54,9 @@ export const deleteProductStart = (id) => ({
 	payload: { id }
 });
 
-export const deleteProductSuccess = () => ({
+export const deleteProductSuccess = (id, message) => ({
 	type: DELETE_PRODUCT_SUCCESS,
-	payload: {}
+	payload: { id, message }
 });
 
 export const deleteProductFailure = (errors) => ({
@@ -89,4 +92,19 @@ export const fetchAllProductsSuccess = (products) => ({
 export const fetchAllProductsFailure = (errors) => ({
 	type: FETCH_ALL_PRODUCTS_FAILURE,
 	payload: { errors }
+});
+
+export const toggleProductFormModal = () => ({
+	type: TOGGLE_PRODUCT_FORM_MODAL,
+	payload: { }
+});
+
+export const loadSavedProduct = (id) => ({
+	type: LOAD_SAVED_PRODUCT,
+	payload: { id }
+});
+
+export const unloadSavedProduct = () => ({
+	type: UNLOAD_SAVED_PRODUCT,
+	payload: { }
 });

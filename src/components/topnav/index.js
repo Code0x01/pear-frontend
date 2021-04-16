@@ -3,15 +3,12 @@ import {
 	Collapse,
 	Navbar,
 	NavbarToggler,
-	NavbarBrand,
 	Nav,
 	NavItem,
-	NavLink,
 	UncontrolledDropdown,
 	DropdownMenu,
 	DropdownItem,
 	DropdownToggle,
-	NavbarText,
 	Container
 } from "reactstrap";
 import { connect } from "react-redux";

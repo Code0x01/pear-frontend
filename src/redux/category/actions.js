@@ -14,6 +14,9 @@ import {
 	FETCH_ALL_CATEGORIES_START,
 	FETCH_ALL_CATEGORIES_SUCCESS,
 	FETCH_ALL_CATEGORIES_FAILURE,
+	TOGGLE_CATEGORY_FORM_MODAL,
+	LOAD_SAVED_CATEGORY,
+	UNLOAD_SAVED_CATEGORY,
 } from "../actions";
 
 export const addCategoryStart = (category) => ({
@@ -36,9 +39,9 @@ export const updateCategoryStart = (category) => ({
 	payload: { category }
 });
 
-export const updateCategorySuccess = (message) => ({
+export const updateCategorySuccess = (category, message) => ({
 	type: UPDATE_CATEGORY_SUCCESS,
-	payload: { message }
+	payload: { category, message }
 });
 
 export const updateCategoryFailure = (errors) => ({
@@ -90,3 +93,19 @@ export const fetchAllCategoriesFailure = (errors) => ({
 	type: FETCH_ALL_CATEGORIES_FAILURE,
 	payload: { errors }
 });
+
+export const toggleCategoryFormModal = () => ({
+	type: TOGGLE_CATEGORY_FORM_MODAL,
+	payload: { }
+});
+
+export const loadSavedCategory = (id) => ({
+	type: LOAD_SAVED_CATEGORY,
+	payload: { id }
+});
+
+export const unloadSavedCategory = () => ({
+	type: UNLOAD_SAVED_CATEGORY,
+	payload: { }
+});
+

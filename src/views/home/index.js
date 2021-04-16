@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { 
 	Container,
 	Card,
@@ -7,194 +7,221 @@ import {
 	Row,
 	Col,
 	Button,
-	Form,
-	FormGroup,
-	Label,
-	Input,
-	FormText
 } from "reactstrap";
+import { Formik, Form } from "formik";
+import { FormikInput, FormikRadioButtons, FormikSelect } from "../../components/formik-controls";
 import Cart from "../../components/cart";
-import OrderPreviewModal from "../../components/order-preview-modal";
+// import OrderPreviewModal from "../../components/order-preview-modal";
 import "./style.css";
+import { connect } from "react-redux";
+import * as Yup from "yup";
+import {
+	fetchAllProductsStart,
+	fetchAllCustomersStart,
+	addItem,
+	addOrderStart,
+} from "../../redux/actions";
+import _ from "lodash";
 
 const Home = props => {
-	const [ orderType, setOrderType ] = useState("sell");
 
-	const handleOnSubmit = e => {
+	const {
+		fetchAllProductsStart,
+		fetchAllCustomersStart,
+		addItem,
+		addOrderStart,
+		products,
+		customers,
+		items,
+		history,
+	} = props;
+	
+	useEffect(() => {
+		fetchAllProductsStart();
+		fetchAllCustomersStart();
+	}, []);
+
+	const initialValues = {
+		orderDate: "",
+		orderType: "",
+		otherDeatils: "",
+		customerId: "",
+		paymentType: "",
+		productId: "",
+	};
+
+	const validationSchema = Yup.object({
+		orderDate: Yup.date().required("Required"),
+		orderType: Yup.string().required("Required"),
+		otherDeatils: Yup.string().max(255),
+		customerId: Yup.number().required(),
+		paymentType: Yup.string().required()
+	});
+
+	const onSubmit = values => {
+		
+		const order = {
+			orderDate: values.orderDate,
+			orderType: values.orderType,
+			otherDeatils: values.otherDetails,
+			customerId: values.customerId,
+			payment: {
+				paymentType: values.paymentType,
+				otherDetails: "",
+			},
+			orderDetails: _.map(items, item => ({
+				unitPrice: item.unitPrice,
+				size: 1,
+				quantity: item.quantity,
+				discount: 0,
+				total: item.total,
+				productId: item.id
+			})),
+		}
+
+		addOrderStart(order, props.history);
+	};
+
+	const addToCart = (e, formik) => {
 		e.preventDefault();
+		if (!_.isNull(formik.values.productId)) {
+			const product = _.find(products, product => product.id === parseInt(formik.values.productId));
+			if (!_.isNull(product)) {
+				addItem({
+					id: product.id,
+					name: product.name,
+					unitPrice: product.price,
+					quantity: 1,
+					total: product.price
+				});
+			}	
+		}
 	};
 
 	return (
 		<Container>
-			<Form onSubmit={handleOnSubmit}>
-				<Card className="mt-2">
-					<CardBody>
-						<Row>
-							<Col md="4">
-								<legend>Order No:</legend>
-								<FormGroup>
-									<Input type="text" name="orderNumber" id="orderNumber" placeholder="Order number" />
-								</FormGroup>
-							</Col>
-							<Col md="4">
-								<legend>Order Type:</legend>
+			<Formik
+				initialValues={initialValues}
+				validationSchema={validationSchema}
+				onSubmit={onSubmit}
+			>
+				{formik => (
+					<Form>
+						<Card className="mt-2">
+							<CardBody>
 								<Row>
-									<Col sm="4">
-										<FormGroup check>
-						          <Label check onClick={() => setOrderType("sell")}>
-						            <Input type="radio" name="orderType" checked={orderType === "sell"} />{' '}Sell
-						          </Label>
-						        </FormGroup>
+									<Col md="4">
+										<FormikInput name="orderDate" id="orderDate" type="date" label="Order Date" />
 									</Col>
-									<Col>
-										<FormGroup check>
-						          <Label check onClick={() => setOrderType("purchase")}>
-						            <Input type="radio" name="orderType" checked={orderType === "purchase"} />{' '}Purchase
-						          </Label>
-						        </FormGroup>
+									<Col md="2">
+										<FormikRadioButtons
+											name="orderType"
+											id="orderType"
+											label="Order Type"
+											options={[
+												{key: "Sell", value: "sell"},
+												{key: "Purshase", value: "purshase"}
+											]}
+										/>
+									</Col>
+									<Col md="6">
+										<FormikInput name="otherDetails" id="otherDetails" type="textarea" label="Other Details" placeholder="Other Details" />
 									</Col>
 								</Row>
-							</Col>
-							<Col md="4">
-								<legend>Order Date:</legend>
-								<FormGroup>
-									<Input type="date" name="orderNumber" id="orderNumber" placeholder="Order number" />
-								</FormGroup>
-							</Col>
-						</Row>
-					</CardBody>
-				</Card>
-				<Card className="mt-2">
-					<CardBody>
-						<Row>
-							<Col md="4">
-								<Card className="h100">
-									<CardHeader>
-										<i className="fa fa-cube"/> Select Product:
-									</CardHeader>
-									<CardBody>
-										<legend>Product Name:</legend>
-										<FormGroup>
-											<Input type="select" name="productName" id="productName">
-							          <option>Product 1</option>
-							          <option>Product 2</option>
-							          <option>Product 3</option>
-							          <option>Product 4</option>
-							          <option>Product 5</option>
-							        </Input>
-										</FormGroup>
-										<legend>Product ID:</legend>
-										<FormGroup>
-											<Input 
-												type="text" 
-												name="productId" 
-												id="productId" 
-												placeholder="Product ID"
-												disabled={true}
-											/>
-										</FormGroup>
-										<legend>Price: </legend>
-										<FormGroup>
-											<Input 
-												type="text" 
-												name="price" 
-												id="price" 
-												placeholder="Price"
-												disabled={true}
-											/>
-										</FormGroup>
-										<legend>Stock: </legend>
-										<FormGroup>
-											<Input 
-												type="text" 
-												name="stock" 
-												id="stock" 
-												placeholder="Stock" 
-												disabled={true}
-											/>
-										</FormGroup>
-									</CardBody>
-								</Card>
-							</Col>
-							<Col md="4">
-								<Card className="h100">
-									<CardHeader>
-										<i className="fa fa-user"/> Select Customer:
-									</CardHeader>
-									<CardBody>
-										<legend>Customer Name:</legend>
-										<FormGroup>
-											<Input type="select" name="customerName" id="customerName">
-							          <option>Customer 1</option>
-							          <option>Customer 2</option>
-							          <option>Customer 3</option>
-							          <option>Customer 4</option>
-							          <option>Customer 5</option>
-							        </Input>
-										</FormGroup>
-										<legend>Customer ID:</legend>
-										<FormGroup>
-											<Input 
-												type="text" 
-												name="custoemrId" 
-												id="customerId" 
-												placeholder="Customer ID"
-												disabled={true}
-											/>
-										</FormGroup>
-										<legend>Phone: </legend>
-										<FormGroup>
-											<Input 
-												type="text" 
-												name="phone" 
-												id="phone" 
-												placeholder="Customer phone"
-												disabled={true}
-											/>
-										</FormGroup>
-									</CardBody>
-								</Card>
-							</Col>
-							<Col md="4">
-								<Card className="h100">
-									<CardHeader>
-										<i className="fa fa-list"/> Order Details:
-									</CardHeader>
-									<CardBody>
-										<legend>Quantity:</legend>
-										<FormGroup>
-											<Input 
-												type="text" 
-												name="quantity" 
-												id="quantity" 
-												placeholder="Product quantity"
-												disabled={true}
-											/>
-										</FormGroup>
-										<legend>Total: </legend>
-										<FormGroup>
-											<Input 
-												type="text" 
-												name="total" 
-												id="total" 
-												placeholder="Total"
-												disabled={true}
-											/>
-										</FormGroup>
-										<Button color="success">
-											<i className="fa fa-check"/> Submit
-										</Button>
-									</CardBody>
-								</Card>
-							</Col>
-						</Row>
-					</CardBody>
-				</Card>
-				<Cart />
-				<OrderPreviewModal />
-			</Form>
+							</CardBody>
+						</Card>
+						<Card className="mt-2">
+							<CardBody>
+								<Row>
+									<Col md="4">
+										<Card className="h100">
+											<CardHeader>
+												<i className="fa fa-cube"/> Select Product
+											</CardHeader>
+											<CardBody>
+												{<FormikSelect
+													name="productId"
+													id="productId"
+													label="Product Name"
+													options={(!_.isNull(products) && !_.isEmpty(products) ? 
+														[{key: "--- Products ---", value: ""}, ...products.map(product => ({ key: product.name, value: product.id }))] : 
+														[]
+													)}
+												/>}
+												<Button type="button" onClick={(e) => addToCart(e, formik)} block color="primary" size="sm">Add to Cart</Button>
+											</CardBody>
+										</Card>
+									</Col>
+									<Col md="4">
+										<Card className="h100">
+											<CardHeader>
+												<i className="fa fa-user"/> Select Customer
+											</CardHeader>
+											<CardBody>
+												{<FormikSelect
+													name="customerId"
+													id="customerId"
+													label="Customer Name"
+													options={(!_.isNull(customers) && !_.isEmpty(customers) ? 
+														[{key: "--- Customers ---", value: ""}, ...customers.map(customer => ({ key: `${customer.firstName} ${customer.lastName}`, value: customer.id }))] : 
+														[]
+													)}
+												/>}
+											</CardBody>
+										</Card>
+									</Col>
+									<Col md="4">
+										<Card className="h100">
+											<CardHeader>
+												<i className="fa fa-dollar"/> Payment
+											</CardHeader>
+											<CardBody>
+												<FormikRadioButtons
+													name="paymentType"
+													id="paymentType"
+													label="Payment Type"
+													options={[
+														{key: "Cash", value: "cash"},
+														{key: "Credit Card", value: "credit card"},
+														{key: "Check", value: "check"}
+													]}
+												/>
+											</CardBody>
+										</Card>
+									</Col>
+								</Row>
+							</CardBody>
+						</Card>
+						<Cart />
+						<Card className="mt-2">
+							<CardBody className="text-right">
+								<Button color="primary mr-2" size="sm" type="button" onClick={(e) => e.preventDefault()}>
+									<i className="fa fa-search-plus"/> Order Preview
+								</Button>
+								<Button color="success" size="sm" type="submit">
+									<i className="fa fa-shopping-cart"/> Checkout
+								</Button>
+							</CardBody>
+						</Card>
+					</Form>
+				)}
+			</Formik>
 		</Container>
 	);
 };
 
-export default Home;
+const mapStateToProps = ({ product, customer, cart }) => {
+	const { products } = product;
+	const { customers } = customer;
+	const { items } = cart;
+	return { products, customers, items };
+};
+
+const mapActionsToProps = dispatch => ({
+	fetchAllProductsStart: () => dispatch(fetchAllProductsStart()),
+	fetchAllCustomersStart: () => dispatch(fetchAllCustomersStart()),
+	addItem: (item) => dispatch(addItem(item)),
+	addOrderStart: (order) => dispatch(addOrderStart(order)),
+});
+
+export default connect(mapStateToProps, mapActionsToProps)(Home);

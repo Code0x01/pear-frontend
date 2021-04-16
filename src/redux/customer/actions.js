@@ -14,6 +14,9 @@ import {
 	FETCH_ALL_CUSTOMERS_START,
 	FETCH_ALL_CUSTOMERS_SUCCESS,
 	FETCH_ALL_CUSTOMERS_FAILURE,
+	TOGGLE_CUSTOMER_FORM_MODAL,
+	LOAD_SAVED_CUSTOMER,
+	UNLOAD_SAVED_CUSTOMER,
 } from "../actions";
 
 export const addCustomerStart = (customer) => ({
@@ -21,9 +24,9 @@ export const addCustomerStart = (customer) => ({
 	payload: { customer }
 });
 
-export const addCustomerSuccess = () => ({
+export const addCustomerSuccess = (customer, message) => ({
 	type: ADD_CUSTOMER_SUCCESS,
-	payload: { }
+	payload: { customer, message }
 });
 
 export const addCustomerFailure = (errors) => ({
@@ -36,9 +39,9 @@ export const updateCustomerStart = (customer) => ({
 	payload: { customer }
 });
 
-export const updateCustomerSuccess = () => ({
+export const updateCustomerSuccess = (customer, message) => ({
 	type: UPDATE_CUSTOMER_SUCCESS,
-	payload: { }
+	payload: { customer, message }
 });
 
 export const updateCustomerFailure = (errors) => ({
@@ -51,9 +54,9 @@ export const deleteCustomerStart = (id) => ({
 	payload: { id }
 });
 
-export const deleteCustomerSuccess = () => ({
+export const deleteCustomerSuccess = (id, message) => ({
 	type: DELETE_CUSTOMER_SUCCESS,
-	payload: {}
+	payload: { id, message }
 });
 
 export const deleteCustomerFailure = (errors) => ({
@@ -89,4 +92,19 @@ export const fetchAllCustomersSuccess = (customers) => ({
 export const fetchAllCustomersFailure = (errors) => ({
 	type: FETCH_ALL_CUSTOMERS_FAILURE,
 	payload: { errors }
+});
+
+export const toggleCustomerFormModal = () => ({
+	type: TOGGLE_CUSTOMER_FORM_MODAL,
+	payload: { }
+});
+
+export const loadSavedCustomer = (id) => ({
+	type: LOAD_SAVED_CUSTOMER,
+	payload: { id }
+});
+
+export const unloadSavedCustomer = () => ({
+	type: UNLOAD_SAVED_CUSTOMER,
+	payload: { }
 });

@@ -9,6 +9,9 @@ import {
 	FETCH_ONE_CATEGORY_FAILURE,
 	FETCH_ALL_CATEGORIES_SUCCESS,
 	FETCH_ALL_CATEGORIES_FAILURE,
+	TOGGLE_CATEGORY_FORM_MODAL,
+	LOAD_SAVED_CATEGORY,
+	UNLOAD_SAVED_CATEGORY,
 } from "../actions";
 import _ from "lodash";
 
@@ -16,7 +19,8 @@ const initialState = {
 	category: null,
 	categories: null,
 	errors: {},
-	message: ""
+	message: "",
+	isOpen: false
 };
 
 export const categoryReducer = (state = initialState, action) => {
@@ -38,9 +42,12 @@ export const categoryReducer = (state = initialState, action) => {
 			}
 
 		case UPDATE_CATEGORY_SUCCESS:
+			const idx = _.findIndex(state.categories, category => category.id === action.payload.category.id);
+			state.categories[idx] = action.payload.category;
 			return {
 				...state,
-				message: "Category updated successfully"
+				message: action.payload.message,
+				errors: {}
 			}
 
 		case UPDATE_CATEGORY_FAILURE:
@@ -52,7 +59,7 @@ export const categoryReducer = (state = initialState, action) => {
 		case DELETE_CATEGORY_SUCCESS:
 			return {
 				...state,
-				categories: _.filter(state.categories, category => category.id != action.payload.id),
+				categories: _.filter(state.categories, category => category.id !== action.payload.id),
 				message: action.payload.message,
 				errors: {}
 			};
@@ -87,6 +94,25 @@ export const categoryReducer = (state = initialState, action) => {
 			return {
 				...state,
 				errors: action.payload.errors
+			}
+
+		case TOGGLE_CATEGORY_FORM_MODAL:
+			return {
+				...state,
+				isOpen: !state.isOpen
+			};
+
+		case LOAD_SAVED_CATEGORY:
+			return {
+				...state,
+				category: _.find(state.categories, category => category.id === action.payload.id),
+				isOpen: true
+			};
+
+		case UNLOAD_SAVED_CATEGORY:
+			return {
+				...state,
+				category: null,
 			}
 
 		default:

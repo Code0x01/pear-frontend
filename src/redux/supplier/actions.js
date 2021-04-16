@@ -14,6 +14,9 @@ import {
 	FETCH_ALL_SUPPLIERS_START,
 	FETCH_ALL_SUPPLIERS_SUCCESS,
 	FETCH_ALL_SUPPLIERS_FAILURE,
+	TOGGLE_SUPPLIER_FORM_MODAL,
+	LOAD_SAVED_SUPPLIER,
+	UNLOAD_SAVED_SUPPLIER,
 } from "../actions";
 
 export const addSupplierStart = (supplier) => ({
@@ -21,9 +24,9 @@ export const addSupplierStart = (supplier) => ({
 	payload: { supplier }
 });
 
-export const addSupplierSuccess = () => ({
+export const addSupplierSuccess = (supplier, message) => ({
 	type: ADD_SUPPLIER_SUCCESS,
-	payload: { }
+	payload: { supplier, message }
 });
 
 export const addSupplierFailure = (errors) => ({
@@ -36,9 +39,9 @@ export const updateSupplierStart = (supplier) => ({
 	payload: { supplier }
 });
 
-export const updateSupplierSuccess = () => ({
+export const updateSupplierSuccess = (supplier, message) => ({
 	type: UPDATE_SUPPLIER_SUCCESS,
-	payload: { }
+	payload: { supplier, message }
 });
 
 export const updateSupplierFailure = (errors) => ({
@@ -51,9 +54,9 @@ export const deleteSupplierStart = (id) => ({
 	payload: { id }
 });
 
-export const deleteSupplierSuccess = () => ({
+export const deleteSupplierSuccess = (id, message) => ({
 	type: DELETE_SUPPLIER_SUCCESS,
-	payload: {}
+	payload: { id, message }
 });
 
 export const deleteSupplierFailure = (errors) => ({
@@ -89,4 +92,19 @@ export const fetchAllSuppliersSuccess = (suppliers) => ({
 export const fetchAllSuppliersFailure = (errors) => ({
 	type: FETCH_ALL_SUPPLIERS_FAILURE,
 	payload: { errors }
+});
+
+export const toggleSupplierFormModal = () => ({
+	type: TOGGLE_SUPPLIER_FORM_MODAL,
+	payload: { }
+});
+
+export const loadSavedSupplier = (id) => ({
+	type: LOAD_SAVED_SUPPLIER,
+	payload: { id }
+});
+
+export const unloadSavedSupplier = () => ({
+	type: UNLOAD_SAVED_SUPPLIER,
+	payload: { }
 });
