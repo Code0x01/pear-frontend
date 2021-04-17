@@ -148,7 +148,9 @@ const Home = props => {
 														[]
 													)}
 												/>}
-												<Button type="button" onClick={(e) => addToCart(e, formik)} block color="primary" size="sm">Add to Cart</Button>
+												<Button type="button" onClick={(e) => addToCart(e, formik)} block color="primary" size="sm">
+													<i className="fa fa-cart-plus mr-2" />Add to Cart
+												</Button>
 											</CardBody>
 										</Card>
 									</Col>
@@ -173,7 +175,7 @@ const Home = props => {
 									<Col md="4">
 										<Card className="h100">
 											<CardHeader>
-												<i className="fa fa-dollar"/> Payment
+												<i className="fa fa-money"/> Payment
 											</CardHeader>
 											<CardBody>
 												<FormikRadioButtons

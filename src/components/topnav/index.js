@@ -48,37 +48,37 @@ class Topnav extends Component {
 				<Nav className="mr-auto" navbar>
 					<NavItem className={classnames({"active": this.props.activeItem === "home"})}>
 						<Link to="/app/home" className="nav-link" onClick={() => this.onNavItemClick("home")}>
-							<i className="fa fa-home mr-2"/>Home
+							<i className="icon-home mr-2"/>Home
 						</Link>
 					</NavItem>
 					<NavItem className={classnames({"active": this.props.activeItem === "products"})}>
 						<Link to="/app/products" className="nav-link" onClick={() => this.onNavItemClick("products")}>
-							<i className="fa fa-cubes mr-2"/>Products
+							<i className="icon-layers mr-2"/>Products
 						</Link>
 					</NavItem>
 					<NavItem className={classnames({"active": this.props.activeItem === "customers"})}>
 						<Link to="/app/customers" className="nav-link" onClick={() => this.onNavItemClick("customers")}>
-							<i className="fa fa-group mr-2"/>Customers
+							<i className="icon-people mr-2"/>Customers
 						</Link>
 					</NavItem>
 					<NavItem className={classnames({"active": this.props.activeItem === "staff"})}>
 						<Link to="/app/staff" className="nav-link" onClick={() => this.onNavItemClick("staff")}>
-							<i className="fa fa-user mr-2"/>Staff
+							<i className="icon-user mr-2"/>Staff
 						</Link>
 					</NavItem>
 					<NavItem className={classnames({"active": this.props.activeItem === "orders"})}>
 						<Link to="/app/orders" className="nav-link" onClick={() => this.onNavItemClick("orders")}>
-							<i className="fa fa-list mr-2"/>Orders
+							<i className="icon-chart mr-2"/>Orders
 						</Link>
 					</NavItem>
 					<NavItem className={classnames({"active": this.props.activeItem === "categories"})}>
 						<Link to="/app/categories" className="nav-link" onClick={() => this.onNavItemClick("categories")}>
-							<i className="fa fa-list mr-2"/>Categories
+							<i className="icon-list mr-2"/>Categories
 						</Link>
 					</NavItem>
 					<NavItem className={classnames({"active": this.props.activeItem === "suppliers"})}>
 						<Link to="/app/suppliers" className="nav-link" onClick={() => this.onNavItemClick("suppliers")}>
-							<i className="fa fa-list mr-2"/>Suppliers
+							<i className="icon-location-pin mr-2"/>Suppliers
 						</Link>
 					</NavItem>
 				</Nav>
